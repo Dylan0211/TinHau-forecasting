@@ -11,10 +11,11 @@ import logging
 # Third Party
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import OneCycleLR
+from torch.utils.data import Subset, ConcatDataset, Dataset
 from transformers import EarlyStoppingCallback, Trainer, TrainingArguments, set_seed
 import numpy as np
 import pandas as pd
-from torch.utils.data import Subset, ConcatDataset
+import matplotlib.pyplot as plt
 
 # First Party
 from tsfm_public.models.tinytimemixer.utils import (
@@ -35,8 +36,9 @@ warnings.filterwarnings("ignore")
 SEED = 42
 set_seed(SEED)
 TTM_MODEL_REVISION = "main"  # versions of pre-trained TTM model
-DATA_ROOT_PATH = './dataset/'
+DATA_ROOT_PATH = 'dataset/'
 OUT_DIR = 'tsfm_save/'
+OUT_CSV_DIR = 'eval_output/'
 
 def cal_cvrmse(pred, true):
     pred = np.array(pred)
@@ -138,17 +140,44 @@ def model_finetuning(model, dataset_name, batch_size, dset_train, dset_val,
     finetune_forecast_trainer.train()
     return finetune_forecast_trainer
 
-def eval_model(model, dset_test, prediction_filter_length, tsp):
+class rollingDataset(Dataset):
+    def __init__(self, data, label):
+        self.data = data
+        self.label = label
+
+    def __getitem__(self, index):
+        return {
+            'past_values': self.data,
+            'future_values': self.label,
+        }
+
+    def __len__(self):
+        return 1
+
+def eval_model(model, dset_test, context_length, prediction_filter_length, tsp, file_name, autoregressive_prediction):
     trainer = Trainer(model=model)
 
-    output = trainer.predict(dset_test)
-    output = output[0][0]
-
-    true_list, pred_list = [], []
-    for i in range(0, len(dset_test), prediction_filter_length):
-        true_list.append(np.array(dset_test[i]["future_values"][:prediction_filter_length, :]))
-        pred_list.append(np.array(output[i, :, :]))
+    true_list = []
+    pred_list = []
+    if autoregressive_prediction:
+        input_data = dset_test[0]['past_values']
+        for i in range(0, len(dset_test), prediction_filter_length):
+            this_dataset = rollingDataset(input_data[-context_length:], dset_test[i]['future_values'])
+            this_true = np.array(dset_test[i]['future_values'][:prediction_filter_length, :])
+            this_pred = np.array(trainer.predict(this_dataset)[0][0]).squeeze(0)
+            # add prediction result to the input data
+            input_data = torch.concatenate([input_data, torch.tensor(this_pred.copy())])
+            true_list.append(this_true)
+            pred_list.append(this_pred)
+    else:
+        output = trainer.predict(dset_test)
+        output = output[0][0]
+        for i in range(0, len(dset_test), prediction_filter_length):
+            true_list.append(np.array(dset_test[i]["future_values"][:prediction_filter_length, :]))
+            pred_list.append(np.array(output[i, :, :]))
     true, pred = np.array(true_list).flatten(), np.array(pred_list).flatten()
+    true = true[:len(dset_test)]
+    pred = pred[:len(dset_test)]
 
     # inverse scale
     df_true = pd.DataFrame(true, columns=['power'])
@@ -162,12 +191,15 @@ def eval_model(model, dset_test, prediction_filter_length, tsp):
     print("CVRMSE: {:.4f}, \t MAE: {:.4f}".format(cv_rmse, mae))
 
     # vis
-    import matplotlib.pyplot as plt
     plt.figure()
-    plt.plot(true, color="red", label="ture")
-    plt.plot(pred, color="blue", label="prediction")
+    plt.plot(true, color="red", label="true")
+    plt.plot(pred, color="blue", label="pred")
     plt.legend()
     plt.show()
+
+    # save evaluation result to csv
+    df_out = pd.DataFrame(np.concatenate([pred, true], axis=1), columns=['pred', 'true'])
+    df_out.to_csv(OUT_CSV_DIR + file_name + '.csv', sep=',', index=False)
 
     return cv_rmse, mae
 
@@ -176,12 +208,14 @@ if __name__ == '__main__':
     # note: parameters that need to be adjusted
     dataset_name = "Genome"
     evaluation_mode = 'zeroshot'  # zeroshot, fewshot
-    ckpt_path = 'tsfm_save/clft/output/checkpoint-v0.8'
-    file_path = './dataset/Genome/Fox_office_Joy.csv'
+    file_name = 'Fox_office_Joy'
+    prediction_filter_length = 96  # can be modified to <= 96
+    autoregressive_prediction = False  # if True, forecast in a rolling manner
 
-    forecast_length = 96
-    prediction_filter_length = 96
+    ckpt_path = 'tsfm_save/clft/output/checkpoint-v0.8'
+    file_path = DATA_ROOT_PATH + dataset_name + f'/{file_name}.csv'
     context_length = 512
+    forecast_length = 96
     batch_size = 16
     fewshot_percent = 100
     n_steps = 5
@@ -212,4 +246,4 @@ if __name__ == '__main__':
         model = trainer.model
 
     # eval model
-    cv_rmse, mae = eval_model(model, dset_test, prediction_filter_length, tsp)
+    cv_rmse, mae = eval_model(model, dset_test, context_length, prediction_filter_length, tsp, file_name, autoregressive_prediction)

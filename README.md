@@ -2,9 +2,9 @@
     Tin Hau v0.8<br>A Building Time-series Foundation Model
 </h1>
 
-This is a Time-series Foundation Model for building load/energy forecasting. The model can conduct zero-shot or few-shot forecasting on diverse building energy data. 
+This is a Time-series Foundation Model for building load/energy forecasting developed based on [`Tiny Time Mixer`](https://github.com/ibm-granite/granite-tsfm). The model can conduct zero-shot or few-shot forecasting on diverse building energy data. 
 
-![tinhau_overview](https://github.com/Dylan0211/TinHau-forecasting/blob/main/tinhau_overview.png)
+![tinhau_overview](tinhau_overview.png)
 
 ## Download this repository
 Either clone the repository using the following command.
