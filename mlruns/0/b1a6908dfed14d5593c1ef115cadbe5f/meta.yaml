@@ -1,0 +1,15 @@
+artifact_uri: file:///D:/PythonProjects/24_CodeFiles/TinHau-forecasting/mlruns/0/b1a6908dfed14d5593c1ef115cadbe5f/artifacts
+end_time: 1729921003538
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: b1a6908dfed14d5593c1ef115cadbe5f
+run_name: tsfm_save/WKGO\output
+run_uuid: b1a6908dfed14d5593c1ef115cadbe5f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729920457447
+status: 3
+tags: []
+user_id: '34500'
