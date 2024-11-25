@@ -54,17 +54,9 @@ def denormalize(load, load_max, load_min):
     return load * (load_max - load_min) + load_min
 
 def get_pretrained_model(ckpt_path='ibm/TTM', freeze_backbone=True):
-    if prediction_filter_length is None:
-        pretrained_model = TinyTimeMixerForPrediction.from_pretrained(
-            ckpt_path, revision=TTM_MODEL_REVISION, config="config.json",
-        )
-    elif prediction_filter_length <= forecast_length:
-        pretrained_model = TinyTimeMixerForPrediction.from_pretrained(
-            ckpt_path, revision=TTM_MODEL_REVISION, prediction_filter_length=prediction_filter_length,
-            config="config.json",
-        )
-    else:
-        raise ValueError(f"`prediction_filter_length` should be <= `forecast_length")
+    pretrained_model = TinyTimeMixerForPrediction.from_pretrained(
+        ckpt_path, revision=TTM_MODEL_REVISION, config="config.json",
+    )
 
     if freeze_backbone:
         print(
@@ -154,28 +146,81 @@ class rollingDataset(Dataset):
     def __len__(self):
         return 1
 
-def eval_model(model, dset_test, context_length, prediction_filter_length, tsp, file_name, autoregressive_prediction):
+def eval_model(model, dset_test, file_name, context_length, horizon_length, forecast_length, tsp):
     trainer = Trainer(model=model)
 
     true_list = []
     pred_list = []
-    if autoregressive_prediction:
-        input_data = dset_test[0]['past_values']
-        for i in range(0, len(dset_test), prediction_filter_length):
-            this_dataset = rollingDataset(input_data[-context_length:], dset_test[i]['future_values'])
-            this_true = np.array(dset_test[i]['future_values'][:prediction_filter_length, :])
-            this_pred = np.array(trainer.predict(this_dataset)[0][0]).squeeze(0)
-            # add prediction result to the input data
-            input_data = torch.concatenate([input_data, torch.tensor(this_pred.copy())])
-            true_list.append(this_true)
-            pred_list.append(this_pred)
-    else:
+    input_list = []
+    if horizon_length <= forecast_length:
         output = trainer.predict(dset_test)
         output = output[0][0]
-        for i in range(0, len(dset_test), prediction_filter_length):
-            true_list.append(np.array(dset_test[i]["future_values"][:prediction_filter_length, :]))
-            pred_list.append(np.array(output[i, :, :]))
-    true, pred = np.array(true_list).flatten(), np.array(pred_list).flatten()
+        for i in range(0, len(dset_test), horizon_length):
+            input_list.append(np.array(dset_test[i]["past_values"]))
+            true_list.append(np.array(dset_test[i]["future_values"][:horizon_length, :]))
+            pred_list.append(np.array(output[i, :, :][:horizon_length, :]))
+    else:
+        for i in range(0, len(dset_test), horizon_length):
+            n_iter = math.ceil(horizon_length / forecast_length)
+            n_remain = horizon_length
+            inner_true_list = []
+            inner_pred_list = []
+            past_values = dset_test[i]["past_values"]
+            for j in range(n_iter):
+                index = i + j * forecast_length
+                if index >= len(dset_test):
+                    continue
+                future_values = dset_test[index]["future_values"]
+
+                this_dataset = rollingDataset(past_values[-context_length:], future_values)
+                this_true = np.array(future_values)
+                this_pred = np.array(trainer.predict(this_dataset)[0][0]).squeeze(0)
+                past_values = torch.concatenate([past_values, torch.tensor(this_pred.copy())], dim=0)
+
+                if n_remain < forecast_length:
+                    this_true = this_true[:n_remain]
+                    this_pred = this_pred[:n_remain]
+                n_remain -= forecast_length
+                inner_true_list.append(this_true)
+                inner_pred_list.append(this_pred)
+
+            inner_true_list = np.concatenate(inner_true_list, axis=0)
+            inner_pred_list = np.concatenate(inner_pred_list, axis=0)
+            input_list.append(np.array(dset_test[i]["past_values"]))
+            true_list.append(inner_true_list)
+            pred_list.append(inner_pred_list)
+
+    # 1. show individual evaluation results
+    n_display = 5
+    for i in range(min(len(dset_test), n_display)):
+        true = true_list[i]
+        pred = pred_list[i]
+        input = input_list[i]
+
+        # inverse scale
+        df_true = pd.DataFrame(true, columns=['power'])
+        df_pred = pd.DataFrame(pred, columns=['power'])
+        df_input = pd.DataFrame(input, columns=['power'])
+        df_inv_true = tsp.inverse_scale_targets(df_true)
+        df_inv_pred = tsp.inverse_scale_targets(df_pred)
+        df_inv_input = tsp.inverse_scale_targets(df_input)
+        true = np.array(df_inv_true)
+        pred = np.array(df_inv_pred)
+        input = np.array(df_inv_input)
+
+        # visualize
+        plt.figure(figsize=(16, 8))
+        plt.plot(range(input.shape[0]), input, color='black', label='input')
+        plt.plot(range(input.shape[0], input.shape[0] + true.shape[0]), true, color="grey", label="true")
+        plt.plot(range(input.shape[0], input.shape[0] + pred.shape[0]), pred, color="blue", label="pred")
+        plt.axvline(x=context_length, color='black', linestyle='--', linewidth=3)
+        plt.legend()
+        plt.title('Sample idx: {}, CV-RMSE: {:.4f}, MAE: {:.4f}'.format(i, cal_cvrmse(pred, true), cal_mae(pred, true)))
+        plt.show()
+
+    # 2. show overall evaluation results
+    true = np.concatenate(true_list, axis=0)
+    pred = np.concatenate(pred_list, axis=0)
     true = true[:len(dset_test)]
     pred = pred[:len(dset_test)]
 
@@ -191,9 +236,10 @@ def eval_model(model, dset_test, context_length, prediction_filter_length, tsp, 
     print("CVRMSE: {:.4f}, \t MAE: {:.4f}".format(cv_rmse, mae))
 
     # vis
-    plt.figure()
-    plt.plot(true, color="red", label="true")
+    plt.figure(figsize=(16, 8))
+    plt.plot(true, color="grey", label="true")
     plt.plot(pred, color="blue", label="pred")
+    plt.title('Overall, CV-RMSE: {:.4f}, MAE: {:.4f}'.format(cal_cvrmse(pred, true), cal_mae(pred, true)))
     plt.legend()
     plt.show()
 
@@ -209,17 +255,17 @@ if __name__ == '__main__':
     dataset_name = "Genome"
     evaluation_mode = 'zeroshot'  # zeroshot, fewshot
     file_name = 'Fox_office_Joy'
-    prediction_filter_length = 96  # can be modified to <= 96
-    autoregressive_prediction = False  # if True, forecast in a rolling manner
+    horizon_length = 96  # forecasting length (can be any positive integer)
 
+    # fixed parameters
     ckpt_path = 'tsfm_save/clft/output/checkpoint-v0.8'
     file_path = DATA_ROOT_PATH + dataset_name + f'/{file_name}.csv'
-    context_length = 512
-    forecast_length = 96
+    n_steps = 5
     batch_size = 16
     fewshot_percent = 100
-    n_steps = 5
     learning_rate = 1e-3
+    context_length = 512
+    forecast_length = 96
 
     # note: evaluation
     tsp, dset_train, dset_val, dset_test = get_data(dataset_name=dataset_name,
@@ -246,4 +292,5 @@ if __name__ == '__main__':
         model = trainer.model
 
     # eval model
-    cv_rmse, mae = eval_model(model, dset_test, context_length, prediction_filter_length, tsp, file_name, autoregressive_prediction)
+    cv_rmse, mae = eval_model(model=model, dset_test=dset_test, file_name=file_name, context_length=context_length,
+                              horizon_length=horizon_length, forecast_length=forecast_length, tsp=tsp)

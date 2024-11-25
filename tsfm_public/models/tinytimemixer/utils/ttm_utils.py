@@ -229,8 +229,8 @@ def get_data(
     dataset_name: str,
     file_name: str,
     data_root_path: str,
-    context_length,
-    forecast_length,
+    context_length=512,
+    forecast_length=96,
     fewshot_fraction=1.0,
 ):
     print(context_length, forecast_length)

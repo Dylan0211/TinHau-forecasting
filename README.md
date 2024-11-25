@@ -67,8 +67,9 @@ pip install -r requirements.txt
 ### Step 3: evaluate the model on the target building
 - Evaluation can be conducted by running the [`eval.py`](https://github.com/Dylan0211/Building-Time-series-Foundation-Model/blob/main/eval.py). There are some parameters to be adjusted.
     - **dataset_name** is the name of your dataset.
-    - **file_path** is the path to the `{target_building}.csv` file.
+    - **file_name** is the name of the target building, i.e.,`{target_building}`.
     - **evaluation_mode** is the way for evaluation. This can be either 'zeroshot' or 'fewshot'.
+    - **prediction_filter_length** is the prediction length. Currently, we support prediction_filter_length <= 96.
 
 ## Latest version: TinHau v0.81
 - We present a new version of TinHau which supports multi-resolution forecasting.
