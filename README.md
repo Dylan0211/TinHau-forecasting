@@ -69,7 +69,7 @@ pip install -r requirements.txt
     - **dataset_name** is the name of your dataset.
     - **file_name** is the name of the target building, i.e.,`{target_building}`.
     - **evaluation_mode** is the way for evaluation. This can be either 'zeroshot' or 'fewshot'.
-    - **prediction_filter_length** is the prediction length. Currently, we support prediction_filter_length <= 96.
+    - **horizon_length** is the forecasting length. This value can be **any positive integer**.
 
 ## Latest version: TinHau v0.81 
 - We present a new version of TinHau which supports multi-resolution forecasting.
