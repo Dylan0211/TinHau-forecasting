@@ -71,7 +71,7 @@ pip install -r requirements.txt
     - **evaluation_mode** is the way for evaluation. This can be either 'zeroshot' or 'fewshot'.
     - **prediction_filter_length** is the prediction length. Currently, we support prediction_filter_length <= 96.
 
-## Latest version: TinHau v0.81
+## Latest version: TinHau v0.81 
 - We present a new version of TinHau which supports multi-resolution forecasting.
 - Apply for the project of TinHau v0.81 by filling out this [`form`](https://forms.gle/2BCMR76fZAdb3rAx5) and we will send the download link to your email.
 
