@@ -2,6 +2,7 @@
 Evaluation
 """
 import os
+import time
 import math
 import tempfile
 import torch
@@ -216,7 +217,7 @@ def eval_model(model, dset_test, file_name, context_length, horizon_length, fore
         plt.axvline(x=context_length, color='black', linestyle='--', linewidth=3)
         plt.legend()
         plt.title('Sample idx: {}, CV-RMSE: {:.4f}, MAE: {:.4f}'.format(i, cal_cvrmse(pred, true), cal_mae(pred, true)))
-        plt.show()
+        # plt.show()
 
     # 2. show overall evaluation results
     true = np.concatenate(true_list, axis=0)
@@ -241,7 +242,7 @@ def eval_model(model, dset_test, file_name, context_length, horizon_length, fore
     plt.plot(pred, color="blue", label="pred")
     plt.title('Overall, CV-RMSE: {:.4f}, MAE: {:.4f}'.format(cal_cvrmse(pred, true), cal_mae(pred, true)))
     plt.legend()
-    plt.show()
+    # plt.show()
 
     # save evaluation result to csv
     df_out = pd.DataFrame(np.concatenate([pred, true], axis=1), columns=['pred', 'true'])
@@ -251,6 +252,9 @@ def eval_model(model, dset_test, file_name, context_length, horizon_length, fore
 
 
 if __name__ == '__main__':
+    # record time
+    start_time = time.time()
+
     # note: parameters that need to be adjusted
     dataset_name = "Genome"
     file_name = 'Fox_office_Joy'
@@ -294,3 +298,7 @@ if __name__ == '__main__':
     # eval model
     cv_rmse, mae = eval_model(model=model, dset_test=dset_test, file_name=file_name, context_length=context_length,
                               horizon_length=horizon_length, forecast_length=forecast_length, tsp=tsp)
+
+    # output time
+    end_time = time.time()
+    print('Execution time: {:.2f}'.format(end_time - start_time))

@@ -106,9 +106,8 @@ There are two metrics supported, i.e., mean absolute error
 ![tinhau_eval_output](tinhau_eval_output.png)
 
 ## Latest version: TinHau v0.81
-We present a new version of TinHau which supports multi-resolution forecasting at 1 hour, 15 mins, etc.
-On our evaluation datasets including buildings with diverse temporal resolutions, TinHau v0.81 achieves **_40.1%_** performance 
-enhancement as compared to TinHau v0.8 in terms of CV-RMSE.
+We present TinHau v0.81 which supports multi-resolution forecasting (at 1 hour, 15 mins, etc) and outperforms TinHau v0.8 by **_5.6%_**
+in terms of CV-RMSE.
 **_Apply for the project of TinHau v0.81 by filling out this [`Application Form for TinHau v0.81`](https://forms.gle/2BCMR76fZAdb3rAx5) and we will send 
 the download link to your email._**
 
