@@ -14,6 +14,8 @@ of Tin Hau v0.81 at [`Application Form for Tin Hau v0.81`](https://forms.gle/2BC
 [//]: # (Developed based on Tiny Time Mixer from IBM, Tin Hau is a compact and lightweight model with only 1M parameters such that)
 [//]: # (it can be run even on **CPU-only machines**.)
 
+![tinhau_overview](tinhau_overview.png)
+
 ## Specification
 
 |                                   Model name                                    |                Tin Hau v0.8                 |
@@ -26,9 +28,6 @@ of Tin Hau v0.81 at [`Application Form for Tin Hau v0.81`](https://forms.gle/2BC
 |                         Point/Probabilistic forecasting                         |              Point forecasting              |
 |                            Single-/Multi-resolution                             |           Single-resolution (1 h)           |
 | Inference cost (average seconds needed on a building with one year hourly data) |           5.64 (GPU: RTX 4070 Ti)           |
-
-
-![tinhau_overview](tinhau_overview.png)
 
 ## Initial Setup
 Clone the repository using the following command.
