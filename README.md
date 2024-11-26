@@ -2,7 +2,20 @@
     Tin Hau v0.8<br>A Building Time-series Foundation Model
 </h1>
 
-This is a Time-series Foundation Model for building load/energy forecasting developed based on [`Tiny Time Mixer`](https://github.com/ibm-granite/granite-tsfm). The model can conduct zero-shot or few-shot forecasting on diverse building energy data. 
+## Specification 
+
+TinHau is a time-series foundation model for building load/energy forecasting which embeds the knowledge of thousands of 
+buildings and adopts an advanced training strategy.
+Thus, for different buildings with different contexts (e.g., dining areas, sports areas, etc), TinHau can perform accurate 
+forecasting with limited (i.e., few-shot forecasting) or even no knowledge (i.e., zero-shot forecasting) about the 
+target building.
+Developed based on [`Tiny Time Mixer`](https://github.com/ibm-granite/granite-tsfm), TinHau is a compact and lightweight model with only 1M parameters such that
+it can be run even on **CPU-only machines**.
+
+The current version TinHau v0.8 supports univariate forecasting with a fixed context length of 512 
+(i.e., number of samples as input) and an adaptive horizon length of any positive integer (i.e., number of samples as 
+forecast output). Besides, TinHau v0.8 only supports a hourly resolution/sampling frequency (_**Multi-resolution forecasting 
+is currently supported in the latest version, TinHau v0.81. Apply for this release at [`Application Form for TinHau v0.81`](https://forms.gle/2BCMR76fZAdb3rAx5)**_).
 
 ![tinhau_overview](tinhau_overview.png)
 
@@ -73,7 +86,7 @@ pip install -r requirements.txt
 
 ## Latest version: TinHau v0.81 
 - We present a new version of TinHau which supports multi-resolution forecasting.
-- Apply for the project of TinHau v0.81 by filling out this [`form`](https://forms.gle/2BCMR76fZAdb3rAx5) and we will send the download link to your email.
+- Apply for the project of TinHau v0.81 by filling out this [`Application Form for TinHau v0.81`](https://forms.gle/2BCMR76fZAdb3rAx5) and we will send the download link to your email.
 
 ## Provide Feedback
 We are willing to hear your feedback on using our model. You can create an [`issue`](https://github.com/Dylan0211/TinHau-forecasting/issues) in GitHub and we will check issues occasionally and provide explanations or instructions.
