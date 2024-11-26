@@ -8,7 +8,7 @@ TinHau is a time-series foundation model for building load/energy forecasting wh
 buildings and adopts an advanced training strategy.
 Thus, for different buildings with different contexts (e.g., dining areas, sports areas, etc), TinHau can perform accurate 
 forecasting with limited or even no knowledge about the target building.
-Developed based on [`Tiny Time Mixer`](https://github.com/ibm-granite/granite-tsfm), TinHau is a compact and lightweight model with only 1M parameters such that
+Developed based on Tiny Time Mixer from IBM, TinHau is a compact and lightweight model with only 1M parameters such that
 it can be run even on **CPU-only machines**.
 
 The current version TinHau v0.8 supports univariate zero-shot forecasting (i.e., no training on target building data, directly inference) 
