@@ -4,12 +4,15 @@
 
 ## Introduction
 
-TinHau is a time-series foundation model for building load/energy forecasting which embeds the knowledge of thousands of 
+Tin Hau is a time-series foundation model for building load/energy forecasting which embeds the knowledge of thousands of 
 buildings and adopts an advanced training strategy.
-Thus, for different buildings with different contexts (e.g., dining areas, sports areas, etc), TinHau can perform accurate 
-forecasting with limited or even no knowledge about the target building.
-Developed based on Tiny Time Mixer from IBM, TinHau is a compact and lightweight model with only 1M parameters such that
-it can be run even on **CPU-only machines**.
+Thus, for different buildings with different contexts (e.g., dining areas, sports areas, etc), Tin Hau v0.8 can perform accurate 
+forecasting with limited (i.e., few-shot forecasting) or even no knowledge (i.e., zero-shot forecasting) about the target building.
+_**News: The latest version Tin Hau v0.81 which supports multi-resolution (i.e., 1 h, 15 mins) is ready-to-use. Apply for the project
+of Tin Hau v0.81 at [`Application Form for Tin Hau v0.81`](https://forms.gle/2BCMR76fZAdb3rAx5)**_
+
+[//]: # (Developed based on Tiny Time Mixer from IBM, Tin Hau is a compact and lightweight model with only 1M parameters such that)
+[//]: # (it can be run even on **CPU-only machines**.)
 
 ## Specification
 
@@ -113,16 +116,28 @@ There are two metrics supported, i.e., mean absolute error
 (MAE) and coefficient variation of the root mean squared error (CV-RMSE).
 ![tinhau_eval_output](tinhau_eval_output.png)
 
-## Latest version: TinHau v0.81
-We present TinHau v0.81 which supports multi-resolution forecasting (at 1 hour, 15 mins, etc) and outperforms TinHau v0.8 by **_5.6%_**
+## Latest version: Tin Hau v0.81
+We present Tin Hau v0.81 which supports multi-resolution forecasting (at 1 hour, 15 mins, etc) and outperforms Tin Hau v0.8 by **_5.6%_**
 in terms of CV-RMSE.
-**_Apply for the project of TinHau v0.81 by filling out this [`Application Form for TinHau v0.81`](https://forms.gle/2BCMR76fZAdb3rAx5) and we will send 
+The specification of Tin Hau v0.81 is shown below.
+**_Apply for the project of Tin Hau v0.81 by filling out this [`Application Form for Tin Hau v0.81`](https://forms.gle/2BCMR76fZAdb3rAx5) and we will send 
 the download link to your email._**
 
+|                                   Model name                                    |                Tin Hau v0.81                |
+|:-------------------------------------------------------------------------------:|:-------------------------------------------:|
+|                        Model size (number of parameters)                        |                     1M                      |
+|                               Model Architecture                                |                TSMixer-based                |
+|                    Context length (number of input samples)                     |                     512                     |
+|                  Horizon length (number of forecasted samples)                  | 96 (can be adapted to any positive integer) |
+|                         Uni-/Multi-variate forecasting                          |           Uni-variate forecasting           |
+|                         Point/Probabilistic forecasting                         |              Point forecasting              |
+|                            Single-/Multi-resolution                             |    Multi-resolution (1 h, 15 mins, etc)     |
+| Inference cost (average seconds needed on a building with one year hourly data) |           5.71 (GPU: RTX 4070 Ti)           |
+
 ## Feedback
-Note that this is an early version of TinHau so we admit that there may be some building contexts where our
+Note that this is an early version of Tin Hau so we admit that there may be some building contexts where our
 model perform poorly on.
-In order to continuously improve TinHau, we are willing to hear your feedbacks or questions.
+In order to continuously improve Tin Hau, we are willing to hear your feedbacks or questions.
 Therefore, if you encounter any problem when trying to run our model on your target building or you find that the performance of 
 our model is not satisfying on your data, you can post issues on GitHub [`issue`](https://github.com/Dylan0211/TinHau-forecasting/issues) to describe the problem or share your experience.
 We will check these issues occasionally and provide explanations or opinions.
