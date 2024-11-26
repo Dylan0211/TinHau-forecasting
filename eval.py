@@ -253,9 +253,9 @@ def eval_model(model, dset_test, file_name, context_length, horizon_length, fore
 if __name__ == '__main__':
     # note: parameters that need to be adjusted
     dataset_name = "Genome"
-    evaluation_mode = 'zeroshot'  # zeroshot, fewshot
     file_name = 'Fox_office_Joy'
     horizon_length = 96  # forecasting length (can be any positive integer)
+    evaluation_mode = 'zeroshot'  # zeroshot, fewshot
 
     # fixed parameters
     ckpt_path = 'tsfm_save/clft/output/checkpoint-v0.8'
