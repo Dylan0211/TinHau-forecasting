@@ -2,7 +2,7 @@
     Tin Hau v0.8<br>A Building Time-series Foundation Model
 </h1>
 
-## Specification 
+## Introduction
 
 TinHau is a time-series foundation model for building load/energy forecasting which embeds the knowledge of thousands of 
 buildings and adopts an advanced training strategy.
@@ -11,11 +11,19 @@ forecasting with limited or even no knowledge about the target building.
 Developed based on Tiny Time Mixer from IBM, TinHau is a compact and lightweight model with only 1M parameters such that
 it can be run even on **CPU-only machines**.
 
-The current version TinHau v0.8 supports univariate zero-shot forecasting (i.e., no training on target building data, directly inference) 
-and few-shot forecasting (i.e., train on 10% of target building data, then inference) with a fixed context length of 512 
-(i.e., number of samples as input) and an adaptive horizon length of any positive integer (i.e., number of samples as 
-forecast output). Besides, TinHau v0.8 only supports a hourly resolution/sampling frequency (_**Multi-resolution forecasting 
-is currently supported in the latest version, TinHau v0.81. Apply for this release at [`Application Form for TinHau v0.81`](https://forms.gle/2BCMR76fZAdb3rAx5)**_).
+## Specification
+
+|                                   Model name                                    |                Tin Hau v0.8                 |
+|:-------------------------------------------------------------------------------:|:-------------------------------------------:|
+|                        Model size (number of parameters)                        |                     1M                      |
+|                               Model Architecture                                |                TSMixer-based                |
+|                    Context length (number of input samples)                     |                     512                     |
+|                  Horizon length (number of forecasted samples)                  | 96 (can be adapted to any positive integer) |
+|                         Uni-/Multi-variate forecasting                          |           Uni-variate forecasting           |
+|                         Point/Probabilistic forecasting                         |              Point forecasting              |
+|                            Single-/Multi-resolution                             |           Single-resolution (1 h)           |
+| Inference cost (average seconds needed on a building with one year hourly data) |           5.64 (GPU: RTX 4070 Ti)           |
+
 
 ![tinhau_overview](tinhau_overview.png)
 
