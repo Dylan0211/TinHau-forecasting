@@ -217,7 +217,7 @@ def eval_model(model, dset_test, file_name, context_length, horizon_length, fore
         plt.axvline(x=context_length, color='black', linestyle='--', linewidth=3)
         plt.legend()
         plt.title('Sample idx: {}, CV-RMSE: {:.4f}, MAE: {:.4f}'.format(i, cal_cvrmse(pred, true), cal_mae(pred, true)))
-        # plt.show()
+        plt.show()
 
     # 2. show overall evaluation results
     true = np.concatenate(true_list, axis=0)
@@ -242,7 +242,7 @@ def eval_model(model, dset_test, file_name, context_length, horizon_length, fore
     plt.plot(pred, color="blue", label="pred")
     plt.title('Overall, CV-RMSE: {:.4f}, MAE: {:.4f}'.format(cal_cvrmse(pred, true), cal_mae(pred, true)))
     plt.legend()
-    # plt.show()
+    plt.show()
 
     # save evaluation result to csv
     df_out = pd.DataFrame(np.concatenate([pred, true], axis=1), columns=['pred', 'true'])
