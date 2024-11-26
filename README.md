@@ -99,6 +99,11 @@ which contains variables to be specified:
     horizon_length = 96  # forecasting length (can be any positive integer)
     evaluation_mode = 'zeroshot'  # zeroshot, fewshot
   ```
+- An example of evaluation output is shown as follows. Here the black line is the input time-series data, the black line
+and the grey line are the forecasted result and the ground truth, respectively.
+There are two metrics supported, i.e., mean absolute error 
+(MAE) and coefficient variation of the root mean squared error (CV-RMSE).
+![tinhau_eval_output](tinhau_eval_output.png)
 
 ## Latest version: TinHau v0.81
 We present a new version of TinHau which supports multi-resolution forecasting at 1 hour, 15 mins, etc.
