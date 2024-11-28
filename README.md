@@ -1,28 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
-    <style>
-        h1 {
-            text-align: center;
-            white-space: nowrap;
-        }
-    </style>
-</head>
 <body>
     <h1>
         Tin Hau: A Building Time-series Foundation Model
     </h1>
 </body>
-</html>
 
 ## ✨ News
 
 - **28 Nov 2024**: Tin Hau v0.81 is released. This version can support **multi-resolution forecasting**. Apply for access at [`application form`](https://forms.gle/2BCMR76fZAdb3rAx5).
-- **27 Sep 2024**: Tin Hau v0.8 is released. This is the first publicly available model.
-
+- **27 Sep 2024**: Tin Hau v0.8 is released. This is a publicly available version and the code is included in this repository.
 
 ## Introduction
 
@@ -30,12 +15,13 @@ Tin Hau is a time-series foundation model for building load/energy forecasting w
 buildings and adopts an advanced training strategy.
 Thus, for different buildings with different contexts (e.g., dining areas, sports areas, etc), Tin Hau can perform accurate 
 forecasting with limited (i.e., few-shot forecasting) or even no knowledge (i.e., zero-shot forecasting) about the target building.
+The model is developed based on Tiny Time Mixer.
 
 ![tinhau_overview](tinhau_overview.png)
 
 ## Specification
 
-|                                   Model name                                    |       Tin Hau (latest version: v0.81)       |
+|                                   Model name                                    |               Tin Hau (v0.8)                |
 |:-------------------------------------------------------------------------------:|:-------------------------------------------:|
 |                        Model size (number of parameters)                        |                     1M                      |
 |                               Model Architecture                                |                TSMixer-based                |
@@ -43,7 +29,7 @@ forecasting with limited (i.e., few-shot forecasting) or even no knowledge (i.e.
 |                  Horizon length (number of forecasted samples)                  | 96 (can be adapted to any positive integer) |
 |                         Uni-/Multi-variate forecasting                          |           Uni-variate forecasting           |
 |                         Point/Probabilistic forecasting                         |              Point forecasting              |
-|                            Single-/Multi-resolution                             |     Multi-resolution (1h, 15mins, etc)      |
+|                            Single-/Multi-resolution                             |           Single-resolution (1h)            |
 | Inference cost (average seconds needed on a building with one year hourly data) |           5.64 (GPU: RTX 4070 Ti)           |
 
 ## Usage
