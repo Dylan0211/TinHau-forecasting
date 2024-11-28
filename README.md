@@ -1,24 +1,41 @@
-<h1 align="center">
-    Tin Hau v0.8<br>A Building Time-series Foundation Model
-</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <style>
+        h1 {
+            text-align: center;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>
+        Tin Hau: A Building Time-series Foundation Model
+    </h1>
+</body>
+</html>
+
+## ✨ News
+
+- **28 Nov 2024**: Tin Hau v0.81 is released. This version can support **multi-resolution forecasting**. Apply for access at [`application form`](https://forms.gle/2BCMR76fZAdb3rAx5).
+- **27 Sep 2024**: Tin Hau v0.8 is released. This is the first publicly available model.
+
 
 ## Introduction
 
 Tin Hau is a time-series foundation model for building load/energy forecasting which embeds the knowledge of thousands of 
 buildings and adopts an advanced training strategy.
-Thus, for different buildings with different contexts (e.g., dining areas, sports areas, etc), Tin Hau v0.8 can perform accurate 
+Thus, for different buildings with different contexts (e.g., dining areas, sports areas, etc), Tin Hau can perform accurate 
 forecasting with limited (i.e., few-shot forecasting) or even no knowledge (i.e., zero-shot forecasting) about the target building.
-_**News: The latest version Tin Hau v0.81 which supports multi-resolution (i.e., 1 h, 15 mins) is ready-to-use. Apply for the project
-of Tin Hau v0.81 at [`Application Form`](https://forms.gle/2BCMR76fZAdb3rAx5)**_.
-
-[//]: # (Developed based on Tiny Time Mixer from IBM, Tin Hau is a compact and lightweight model with only 1M parameters such that)
-[//]: # (it can be run even on **CPU-only machines**.)
 
 ![tinhau_overview](tinhau_overview.png)
 
 ## Specification
 
-|                                   Model name                                    |                Tin Hau v0.8                 |
+|                                   Model name                                    |       Tin Hau (latest version: v0.81)       |
 |:-------------------------------------------------------------------------------:|:-------------------------------------------:|
 |                        Model size (number of parameters)                        |                     1M                      |
 |                               Model Architecture                                |                TSMixer-based                |
@@ -26,10 +43,12 @@ of Tin Hau v0.81 at [`Application Form`](https://forms.gle/2BCMR76fZAdb3rAx5)**_
 |                  Horizon length (number of forecasted samples)                  | 96 (can be adapted to any positive integer) |
 |                         Uni-/Multi-variate forecasting                          |           Uni-variate forecasting           |
 |                         Point/Probabilistic forecasting                         |              Point forecasting              |
-|                            Single-/Multi-resolution                             |           Single-resolution (1 h)           |
+|                            Single-/Multi-resolution                             |     Multi-resolution (1h, 15mins, etc)      |
 | Inference cost (average seconds needed on a building with one year hourly data) |           5.64 (GPU: RTX 4070 Ti)           |
 
-## Initial Setup
+## Usage
+
+### Step 1: initial setup
 Clone the repository using the following command.
 ```bash
 git clone https://github.com/Dylan0211/TinHau-forecasting.git
@@ -39,9 +58,7 @@ The supported python version is 3.8. Use the following command to install requir
 pip install -r requirements.txt
 ```
 
-## Tutorial: How to do model inference on your own building data
-
-### Step 1: prepare raw data file
+### Step 2: prepare raw data file
 - The target building energy data should be stored in a `{target_building}.csv` file with two columns:
     - **timestamp_column** is the column that contains the timestamp of the time-series (e.g., "time").
     - **target_columns** are the columns to be forecasted (e.g., "power").
@@ -58,7 +75,7 @@ pip install -r requirements.txt
         | 5 | 2016-12-29 16:00:00 | 201.93 |
 
 
-### Step 2: config data loader
+### Step 3: config data loader
 - The config of the target building should be specified for the data loader. Specifically, a config dict for the target 
 building should be added to the `get_data()` function under `tsfm_public/models/tinytimemixer/utils/ttm_utils.py`. 
 An example is shown as follows. Here, **"Genome"** is the name of the config dict (the same as the `{dataset_name}`) 
@@ -93,7 +110,7 @@ which contains variables to be specified:
     }
   ```
 
-### Step 3: evaluate the model on the target building
+### Step 4: evaluate the model on the target building
 - Evaluation can be conducted by running the `eval.py`. There are some parameters to be adjusted.
     - **dataset_name** is the name of your dataset, i.e.,`{dataset_name}`.
     - **file_name** is the name of the target building, i.e.,`{target_building}`.
@@ -114,24 +131,6 @@ and the grey line are the forecasted result and the ground truth, respectively.
 There are two metrics supported, i.e., mean absolute error 
 (MAE) and coefficient variation of the root mean squared error (CV-RMSE).
 ![tinhau_eval_output](tinhau_eval_output.png)
-
-## Latest version: Tin Hau v0.81
-We present Tin Hau v0.81 which supports multi-resolution forecasting (at 1 hour, 15 mins, etc) and outperforms Tin Hau v0.8 by **_5.6%_**
-in terms of CV-RMSE.
-The specification of Tin Hau v0.81 is shown below.
-**_Apply for the project of Tin Hau v0.81 by filling out this [`Application Form`](https://forms.gle/2BCMR76fZAdb3rAx5) and we will send 
-the download link to your email._**
-
-|                                   Model name                                    |                Tin Hau v0.81                |
-|:-------------------------------------------------------------------------------:|:-------------------------------------------:|
-|                        Model size (number of parameters)                        |                     1M                      |
-|                               Model Architecture                                |                TSMixer-based                |
-|                    Context length (number of input samples)                     |                     512                     |
-|                  Horizon length (number of forecasted samples)                  | 96 (can be adapted to any positive integer) |
-|                         Uni-/Multi-variate forecasting                          |           Uni-variate forecasting           |
-|                         Point/Probabilistic forecasting                         |              Point forecasting              |
-|                            Single-/Multi-resolution                             |    Multi-resolution (1 h, 15 mins, etc)     |
-| Inference cost (average seconds needed on a building with one year hourly data) |           5.71 (GPU: RTX 4070 Ti)           |
 
 ## Feedback
 Note that this is an early version of Tin Hau so we admit that there may be some building contexts where our
