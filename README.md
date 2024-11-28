@@ -9,7 +9,7 @@ buildings and adopts an advanced training strategy.
 Thus, for different buildings with different contexts (e.g., dining areas, sports areas, etc), Tin Hau v0.8 can perform accurate 
 forecasting with limited (i.e., few-shot forecasting) or even no knowledge (i.e., zero-shot forecasting) about the target building.
 _**News: The latest version Tin Hau v0.81 which supports multi-resolution (i.e., 1 h, 15 mins) is ready-to-use. Apply for the project
-of Tin Hau v0.81 at [`Application Form for Tin Hau v0.81`](https://forms.gle/2BCMR76fZAdb3rAx5)**_
+of Tin Hau v0.81 at [`Application Form`](https://forms.gle/2BCMR76fZAdb3rAx5)**_.
 
 [//]: # (Developed based on Tiny Time Mixer from IBM, Tin Hau is a compact and lightweight model with only 1M parameters such that)
 [//]: # (it can be run even on **CPU-only machines**.)
@@ -119,7 +119,7 @@ There are two metrics supported, i.e., mean absolute error
 We present Tin Hau v0.81 which supports multi-resolution forecasting (at 1 hour, 15 mins, etc) and outperforms Tin Hau v0.8 by **_5.6%_**
 in terms of CV-RMSE.
 The specification of Tin Hau v0.81 is shown below.
-**_Apply for the project of Tin Hau v0.81 by filling out this [`Application Form for Tin Hau v0.81`](https://forms.gle/2BCMR76fZAdb3rAx5) and we will send 
+**_Apply for the project of Tin Hau v0.81 by filling out this [`Application Form`](https://forms.gle/2BCMR76fZAdb3rAx5) and we will send 
 the download link to your email._**
 
 |                                   Model name                                    |                Tin Hau v0.81                |
