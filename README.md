@@ -129,6 +129,6 @@ We will check these issues occasionally and provide explanations or opinions.
 ## :phone: Contact us
 If you are interested in our project, you can contact us via email. The followings are the contact information of each project creator.
 <br> Professor Dan Wang dan.wang@polyu.edu.hk
-<br> Marco marco.deng@polyu.edu.hk
-<br> Liang Rui maxwell.liang@connect.polyu.hk
+<br> Yang Deng marco.deng@polyu.edu.hk
+<br> Rui Liang maxwell-rui.liang@connect.polyu.hk
   
