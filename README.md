@@ -125,4 +125,10 @@ In order to continuously improve Tin Hau, we are willing to hear your feedbacks 
 Therefore, if you encounter any problem when trying to run our model on your target building or you find that the performance of 
 our model is not satisfying on your data, you can post issues on GitHub [`issue`](https://github.com/Dylan0211/TinHau-forecasting/issues) to describe the problem or share your experience.
 We will check these issues occasionally and provide explanations or opinions.
+
+## :phone: Contact us
+If you are interested in our project, you can contact us via email. The followings are the contact information of each project creator.
+<br> Professor Dan Wang dan.wang@polyu.edu.hk
+<br> Marco marco.deng@polyu.edu.hk
+<br> Liang Rui maxwell.liang@connect.polyu.hk
   
